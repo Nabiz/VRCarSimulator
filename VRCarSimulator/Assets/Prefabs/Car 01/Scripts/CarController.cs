@@ -45,8 +45,6 @@ public class CarController : MonoBehaviour
         // Acceleration Input
         verticalInput = Input.GetAxis("Vertical");
 
-
-        Debug.Log(verticalInput);
     }
 
     private void HandleMotor()

@@ -22,6 +22,7 @@ namespace PupilLabs
 
         Vector3 localGazeDirection;
         float gazeDistance;
+        double gazeTimestamp;
         bool isGazing = false;
 
         bool errorAngleBasedMarkerRadius = true;
@@ -33,6 +34,9 @@ namespace PupilLabs
         float maxAlpha = 0.8f;
 
         float lastConfidence;
+
+        [Header("Annotation")]
+        public AnnotationPublisher annotationPublisher;
 
         void OnEnable()
         {
@@ -153,6 +157,7 @@ namespace PupilLabs
 
             localGazeDirection = gazeData.GazeDirection;
             gazeDistance = gazeData.GazeDistance;
+            gazeTimestamp = gazeData.PupilTimestamp;
         }
 
         void VisualizeConfidence()
@@ -175,7 +180,10 @@ namespace PupilLabs
             if (Physics.SphereCast(origin, sphereCastRadius, direction, out RaycastHit hit, Mathf.Infinity))
             {
                 Debug.DrawRay(origin, direction * hit.distance, Color.yellow);
-
+                //Dictionary<string, object> lookAtObject = new Dictionary<string, object>();
+                //lookAtObject["lookAtObject"] = hit.collider.gameObject.name;
+                annotationPublisher.SendAnnotation(hit.collider.gameObject.name, gazeTimestamp);
+                // Debug.Log(gazeTimestamp.ToString() +": " + hit.collider.gameObject.name);
                 projectionMarker.position = hit.point;
 
                 gazeDirectionMarker.position = origin + direction * hit.distance;
