@@ -1947,7 +1947,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2035898845}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f1bc6b90be831741951e5ed834083be, type: 3}
   m_Name: 
@@ -1998,6 +1998,29 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 385024878}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2035898851
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2035898845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af6fae3b8604f3940981398fb6a7521f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  motorForce: 300
+  breakForce: 6000
+  maxSteerAngle: 30
+  frontLeftWheelCollider: {fileID: 896814803}
+  frontRightWheelCollider: {fileID: 598492704}
+  rearLeftWheelCollider: {fileID: 260704738}
+  rearRightWheelCollider: {fileID: 601111963}
+  frontLeftWheelTransform: {fileID: 89242922}
+  frontRightWheelTransform: {fileID: 508015999}
+  rearLeftWheelTransform: {fileID: 1279259317}
+  rearRightWheelTransform: {fileID: 2132532028}
 --- !u!1 &2041310263
 GameObject:
   m_ObjectHideFlags: 0
