@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using TMPro;
 public class CarControllerWheel : MonoBehaviour
 {
     private float horizontalInput, verticalInput, breakInput;
@@ -11,6 +11,10 @@ public class CarControllerWheel : MonoBehaviour
 
     private bool isStarted = false;
     private bool gearForrward = true;
+
+    private Rigidbody rb;
+    private float radius = 6f;
+    private float downForce = 50f;
 
     // Settings
     [SerializeField] private float motorForce, breakForce, maxSteerAngle;
@@ -25,6 +29,12 @@ public class CarControllerWheel : MonoBehaviour
 
     [SerializeField] private Transform steerWheel;
     double speed = 0f;
+    public TextMeshProUGUI speedText;
+
+    private void Start()
+    {
+        rb = gameObject.GetComponent<Rigidbody>();
+    }
 
     private void Update()
     {
@@ -40,7 +50,9 @@ public class CarControllerWheel : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        speed = 3.6 * gameObject.GetComponent<Rigidbody>().velocity.magnitude;
+        speed = 3.6 * rb.velocity.magnitude;
+        speedText.text =  Math.Round(speed).ToString();
+        Debug.Log(speed);
         if (isStarted)
         {
             //Debug.Log(speed);
@@ -49,6 +61,7 @@ public class CarControllerWheel : MonoBehaviour
             UpdateWheels();
         }
         steerWheel.localEulerAngles = new Vector3(0f, 0f, -horizontalInput * 90f);
+        AddDownForce();
     }
 
     private void GetInput()
@@ -64,14 +77,16 @@ public class CarControllerWheel : MonoBehaviour
         
         if (Input.GetButtonDown("LowerGear") && speed < 4f)
         {
-            Debug.Log("DUPA");
             gearForrward = false;
         }
         if (Input.GetButtonDown("HigherGear") && speed < 4f)
         {
-            Debug.Log("WIEKSZA DUPA");
             gearForrward = true;
         }
+    }
+    private void AddDownForce()
+    {
+        rb.AddForce(-transform.up * downForce * rb.velocity.magnitude);
     }
 
     private void HandleMotor()
@@ -101,9 +116,24 @@ public class CarControllerWheel : MonoBehaviour
 
     private void HandleSteering()
     {
-        currentSteerAngle = maxSteerAngle * horizontalInput;
-        frontLeftWheelCollider.steerAngle = currentSteerAngle;
-        frontRightWheelCollider.steerAngle = currentSteerAngle;
+        if (horizontalInput > 0)
+        {
+            frontLeftWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(2.55f / (radius + (1.5f / 2))) * horizontalInput;
+            frontRightWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(2.55f / (radius - (1.5f / 2))) * horizontalInput;
+        }
+        else if(horizontalInput < 0)
+        {
+            frontLeftWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(2.55f / (radius - (1.5f / 2))) * horizontalInput;
+            frontRightWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(2.55f / (radius + (1.5f / 2))) * horizontalInput;
+        }
+        else
+        {
+            frontLeftWheelCollider.steerAngle = 0f;
+            frontRightWheelCollider.steerAngle = 0f;
+        }
+        //currentSteerAngle = maxSteerAngle * horizontalInput;
+        //frontLeftWheelCollider.steerAngle = currentSteerAngle;
+        //frontRightWheelCollider.steerAngle = currentSteerAngle;
     }
 
     private void UpdateWheels()
