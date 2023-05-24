@@ -28,7 +28,7 @@ public class CarControllerWheel : MonoBehaviour
     [SerializeField] private Transform rearLeftWheelTransform, rearRightWheelTransform;
 
     [SerializeField] private Transform steerWheel;
-    double speed = 0f;
+    float speed = 0f;
     public TextMeshProUGUI speedText;
 
     private void Start()
@@ -50,7 +50,7 @@ public class CarControllerWheel : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        speed = 3.6 * rb.velocity.magnitude;
+        speed = 3.6f * rb.velocity.magnitude;
         speedText.text =  Math.Round(speed).ToString();
         Debug.Log(speed);
         if (isStarted)
@@ -151,5 +151,10 @@ public class CarControllerWheel : MonoBehaviour
         wheelCollider.GetWorldPose(out pos, out rot);
         wheelTransform.rotation = rot;
         wheelTransform.position = pos;
+    }
+
+    public float getSpeed()
+    {
+        return speed;
     }
 }
