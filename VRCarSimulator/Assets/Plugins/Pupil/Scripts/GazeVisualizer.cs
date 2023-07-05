@@ -37,6 +37,7 @@ namespace PupilLabs
 
         [Header("Annotation")]
         public AnnotationPublisher annotationPublisher;
+        public RecordingController recordingController;
 
         void OnEnable()
         {
@@ -179,25 +180,28 @@ namespace PupilLabs
 
             if (Physics.SphereCast(origin, sphereCastRadius, direction, out RaycastHit hit, Mathf.Infinity))
             {
-                Debug.DrawRay(origin, direction * hit.distance, Color.yellow);
-                //Dictionary<string, object> lookAtObject = new Dictionary<string, object>();
-                //lookAtObject["lookAtObject"] = hit.collider.gameObject.name;
-                annotationPublisher.SendAnnotation(hit.collider.gameObject.name, gazeTimestamp);
-                // Debug.Log(gazeTimestamp.ToString() +": " + hit.collider.gameObject.name);
-                projectionMarker.position = hit.point;
-
-                gazeDirectionMarker.position = origin + direction * hit.distance;
-                gazeDirectionMarker.LookAt(origin);
-
-                if (errorAngleBasedMarkerRadius)
+                if (recordingController.IsRecording)
                 {
-                    gazeDirectionMarker.localScale = GetErrorAngleBasedScale(origMarkerScale, hit.distance, angleErrorEstimate);
+                    Dictionary<string, object> hitObjectDict = new Dictionary<string, object>() {
+                    { "hit_object", hit.collider.gameObject.name }, { "object_distance", hit.distance } };
+                    annotationPublisher.SendAnnotation("hit_object", gazeTimestamp, 0.0f, hitObjectDict);
                 }
+                else
+                {
+                    Debug.DrawRay(origin, direction * hit.distance, Color.yellow);
+                    gazeDirectionMarker.position = origin + direction * hit.distance;
+                    gazeDirectionMarker.LookAt(origin);
+                    projectionMarker.position = hit.point;
+                    if (errorAngleBasedMarkerRadius)
+                    {
+                        gazeDirectionMarker.localScale = GetErrorAngleBasedScale(origMarkerScale, hit.distance, angleErrorEstimate);
+                    }
+                }    
             }
-            else
+/*            else
             {
                 Debug.DrawRay(origin, direction * 10, Color.white);
-            }
+            }*/
         }
 
         Vector3 GetErrorAngleBasedScale(Vector3 origScale, float distance, float errorAngle)

@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using PupilLabs;
+
 public class CarControllerWheel : MonoBehaviour
 {
     private float horizontalInput, verticalInput, breakInput;
@@ -31,6 +33,10 @@ public class CarControllerWheel : MonoBehaviour
     float speed = 0f;
     public TextMeshProUGUI speedText;
 
+    [Header("Recording")]
+    public AnnotationPublisher annotationPublisher;
+    public RecordingController recordingController;
+
     private void Start()
     {
         rb = gameObject.GetComponent<Rigidbody>();
@@ -52,16 +58,18 @@ public class CarControllerWheel : MonoBehaviour
     {
         speed = 3.6f * rb.velocity.magnitude;
         speedText.text =  Math.Round(speed).ToString();
-        Debug.Log(speed);
         if (isStarted)
         {
-            //Debug.Log(speed);
             HandleMotor();
             HandleSteering();
             UpdateWheels();
         }
-        steerWheel.localEulerAngles = new Vector3(0f, 0f, -horizontalInput * 90f);
+        steerWheel.localEulerAngles = new Vector3(0f, 0f, -horizontalInput * 450f);
         AddDownForce();
+        if (recordingController.IsRecording)
+        {
+            LogCarStatusAnnotation();
+        }
     }
 
     private void GetInput()
@@ -156,5 +164,20 @@ public class CarControllerWheel : MonoBehaviour
     public float getSpeed()
     {
         return speed;
+    }
+
+    private void LogCarStatusAnnotation()
+    {
+        if(Time.frameCount % 2 == 0)
+        {
+            Dictionary<string, object> carStaus = new Dictionary<string, object>();
+            carStaus.Add("speed", speed);
+            carStaus.Add("pos_x", transform.position.x);
+            carStaus.Add("pos_y", transform.position.y);
+            carStaus.Add("gas_input", verticalInput);
+            carStaus.Add("break_input", breakInput);
+            carStaus.Add("wheel_input", horizontalInput);
+            annotationPublisher.SendAnnotation("car_status", 0f, carStaus);
+        }
     }
 }
