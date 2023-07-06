@@ -8,18 +8,16 @@ using PupilLabs;
 public class CarControllerWheel : MonoBehaviour
 {
     private float horizontalInput, verticalInput, breakInput;
-    private float currentSteerAngle, currentbreakForce;
-    private bool isBreaking;
 
     private bool isStarted = false;
     private bool gearForrward = true;
 
     private Rigidbody rb;
-    private float radius = 6f;
-    private float downForce = 50f;
+    private float radius = 3.5f;
+    private float downForce = 100f;
 
     // Settings
-    [SerializeField] private float motorForce, breakForce, maxSteerAngle;
+    [SerializeField] private float motorTorque, breakForce, maxSteerAngle;
 
     // Wheel Colliders
     [SerializeField] private WheelCollider frontLeftWheelCollider, frontRightWheelCollider;
@@ -28,6 +26,12 @@ public class CarControllerWheel : MonoBehaviour
     // Wheels
     [SerializeField] private Transform frontLeftWheelTransform, frontRightWheelTransform;
     [SerializeField] private Transform rearLeftWheelTransform, rearRightWheelTransform;
+
+    [SerializeField] private AnimationCurve enginePower;
+
+    [SerializeField] private float[] gears = new float[6];
+    private int currentGear = 0;
+
 
     [SerializeField] private Transform steerWheel;
     float speed = 0f;
@@ -60,8 +64,10 @@ public class CarControllerWheel : MonoBehaviour
         speedText.text =  Math.Round(speed).ToString();
         if (isStarted)
         {
-            HandleMotor();
-            HandleSteering();
+            ChangeGear();
+            CalculateEngineTorque();
+            Motor();
+            Steering();
             UpdateWheels();
         }
         steerWheel.localEulerAngles = new Vector3(0f, 0f, -horizontalInput * 450f);
@@ -97,20 +103,23 @@ public class CarControllerWheel : MonoBehaviour
         rb.AddForce(-transform.up * downForce * rb.velocity.magnitude);
     }
 
-    private void HandleMotor()
+    private void Motor()
     {
         if (gearForrward)
         {
-            frontLeftWheelCollider.motorTorque = verticalInput * motorForce;
-            frontRightWheelCollider.motorTorque = verticalInput * motorForce;
+            frontLeftWheelCollider.motorTorque = motorTorque;
+            frontRightWheelCollider.motorTorque = motorTorque;
+            rearLeftWheelCollider.motorTorque = motorTorque;
+            rearRightWheelCollider.motorTorque = motorTorque;
         }
         else
         {
-            frontLeftWheelCollider.motorTorque = -verticalInput * motorForce;
-            frontRightWheelCollider.motorTorque = -verticalInput * motorForce;
+            frontLeftWheelCollider.motorTorque = -motorTorque;
+            frontRightWheelCollider.motorTorque = -motorTorque;
+            rearLeftWheelCollider.motorTorque = -motorTorque;
+            rearRightWheelCollider.motorTorque = -motorTorque;
         }
 
-        //currentbreakForce = isBreaking ? breakForce : 0f;
         ApplyBreaking();
     }
 
@@ -122,26 +131,54 @@ public class CarControllerWheel : MonoBehaviour
         rearRightWheelCollider.brakeTorque = breakInput * breakForce;
     }
 
-    private void HandleSteering()
+    private void Steering()
     {
         if (horizontalInput > 0)
         {
-            frontLeftWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(2.55f / (radius + (1.5f / 2))) * horizontalInput;
-            frontRightWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(2.55f / (radius - (1.5f / 2))) * horizontalInput;
+            frontLeftWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(2.12f / (radius + (1.0f / 2))) * horizontalInput;
+            frontRightWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(2.12f / (radius - (1.0f / 2))) * horizontalInput;
         }
         else if(horizontalInput < 0)
         {
-            frontLeftWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(2.55f / (radius - (1.5f / 2))) * horizontalInput;
-            frontRightWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(2.55f / (radius + (1.5f / 2))) * horizontalInput;
+            frontLeftWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(2.12f / (radius - (1.0f / 2))) * horizontalInput;
+            frontRightWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(2.12f / (radius + (1.0f / 2))) * horizontalInput;
         }
         else
         {
             frontLeftWheelCollider.steerAngle = 0f;
             frontRightWheelCollider.steerAngle = 0f;
         }
-        //currentSteerAngle = maxSteerAngle * horizontalInput;
-        //frontLeftWheelCollider.steerAngle = currentSteerAngle;
-        //frontRightWheelCollider.steerAngle = currentSteerAngle;
+    }
+
+    float engineRpm = 0;
+    private void CalculateEngineTorque()
+    {
+        float wheelRpm = CalculateWheelRpm();
+        motorTorque = enginePower.Evaluate(engineRpm) * gears[currentGear] * verticalInput / 4.0f;
+        float velocity = 0.0f;
+        engineRpm = Mathf.SmoothDamp(engineRpm, 800 + (Mathf.Abs(wheelRpm) * 3.4f * gears[currentGear]), ref velocity, 0.02f);
+        
+    }
+
+    private void ChangeGear()
+    {
+        if (engineRpm > 4800)
+        {
+            currentGear = Math.Clamp(currentGear + 1, 0, gears.Length-1);
+        }
+        else if (engineRpm < 2000)
+        {
+            currentGear = Math.Clamp(currentGear - 1, speed < 4.0f ? 0 : 1, gears.Length-1);
+        }
+
+        Debug.Log(engineRpm.ToString() + " " + (currentGear+1).ToString() + " " + speed.ToString());
+    }
+
+    private float CalculateWheelRpm()
+    {
+        float wheelRpm = 0.0f;
+        wheelRpm = frontLeftWheelCollider.rpm + frontRightWheelCollider.rpm + rearLeftWheelCollider.rpm + rearRightWheelCollider.rpm;
+        return wheelRpm/2f;
     }
 
     private void UpdateWheels()
