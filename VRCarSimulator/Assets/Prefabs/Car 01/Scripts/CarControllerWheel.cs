@@ -13,7 +13,7 @@ public class CarControllerWheel : MonoBehaviour
     private bool gearForrward = true;
 
     private Rigidbody rb;
-    private float radius = 3.5f;
+    private float radius = 4f;
     private float downForce = 100f;
 
     // Settings
@@ -35,7 +35,6 @@ public class CarControllerWheel : MonoBehaviour
 
     [SerializeField] private Transform steerWheel;
     float speed = 0f;
-    public TextMeshProUGUI speedText;
 
     [Header("Recording")]
     public AnnotationPublisher annotationPublisher;
@@ -61,10 +60,12 @@ public class CarControllerWheel : MonoBehaviour
     private void FixedUpdate()
     {
         speed = 3.6f * rb.velocity.magnitude;
-        speedText.text =  Math.Round(speed).ToString();
         if (isStarted)
         {
-            ChangeGear();
+            if (gearForrward)
+            {
+                ChangeGear();
+            }  
             CalculateEngineTorque();
             Motor();
             Steering();
@@ -135,13 +136,13 @@ public class CarControllerWheel : MonoBehaviour
     {
         if (horizontalInput > 0)
         {
-            frontLeftWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(2.12f / (radius + (1.0f / 2))) * horizontalInput;
-            frontRightWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(2.12f / (radius - (1.0f / 2))) * horizontalInput;
+            frontLeftWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(3.18f / (radius + (1.5f / 2.0f))) * horizontalInput;
+            frontRightWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(3.18f / (radius - (1.5f / 2.0f))) * horizontalInput;
         }
         else if(horizontalInput < 0)
         {
-            frontLeftWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(2.12f / (radius - (1.0f / 2))) * horizontalInput;
-            frontRightWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(2.12f / (radius + (1.0f / 2))) * horizontalInput;
+            frontLeftWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(2.12f / (radius - (1.5f / 2.0f))) * horizontalInput;
+            frontRightWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(2.12f / (radius + (1.5f / 2.0f))) * horizontalInput;
         }
         else
         {
@@ -201,6 +202,16 @@ public class CarControllerWheel : MonoBehaviour
     public float getSpeed()
     {
         return speed;
+    }
+
+    public float getEngineRpm()
+    {
+        return engineRpm;
+    }
+
+    public int getCurrentGear()
+    {
+        return gearForrward ? currentGear+1 : -1;
     }
 
     private void LogCarStatusAnnotation()
