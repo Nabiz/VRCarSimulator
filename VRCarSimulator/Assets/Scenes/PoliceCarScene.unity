@@ -2878,11 +2878,41 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1183846830464115567, guid: d742959d7e895bd43aa1d37315571bc8,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.202
+      objectReference: {fileID: 0}
+    - target: {fileID: 1183846830464115567, guid: d742959d7e895bd43aa1d37315571bc8,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.055
+      objectReference: {fileID: 0}
+    - target: {fileID: 1183846831483060941, guid: d742959d7e895bd43aa1d37315571bc8,
+        type: 3}
+      propertyPath: m_WheelDampingRate
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1183846831490955638, guid: d742959d7e895bd43aa1d37315571bc8,
+        type: 3}
+      propertyPath: m_WheelDampingRate
+      value: 1.2
+      objectReference: {fileID: 0}
     - target: {fileID: 1183846831558736844, guid: d742959d7e895bd43aa1d37315571bc8,
         type: 3}
       propertyPath: controller
       value: 
       objectReference: {fileID: 83885079}
+    - target: {fileID: 1183846831799208510, guid: d742959d7e895bd43aa1d37315571bc8,
+        type: 3}
+      propertyPath: m_WheelDampingRate
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1183846832223243535, guid: d742959d7e895bd43aa1d37315571bc8,
+        type: 3}
+      propertyPath: m_WheelDampingRate
+      value: 1.2
+      objectReference: {fileID: 0}
     - target: {fileID: 1183846832395339461, guid: d742959d7e895bd43aa1d37315571bc8,
         type: 3}
       propertyPath: m_RootOrder
@@ -2948,6 +2978,31 @@ PrefabInstance:
       propertyPath: recordingController
       value: 
       objectReference: {fileID: 51079948}
+    - target: {fileID: 1183846832395339462, guid: d742959d7e895bd43aa1d37315571bc8,
+        type: 3}
+      propertyPath: enginePower.m_Curve.Array.data[1].time
+      value: 4050
+      objectReference: {fileID: 0}
+    - target: {fileID: 1183846832395339462, guid: d742959d7e895bd43aa1d37315571bc8,
+        type: 3}
+      propertyPath: enginePower.m_Curve.Array.data[2].time
+      value: 4750
+      objectReference: {fileID: 0}
+    - target: {fileID: 1183846832395339462, guid: d742959d7e895bd43aa1d37315571bc8,
+        type: 3}
+      propertyPath: enginePower.m_Curve.Array.data[1].value
+      value: 759.25604
+      objectReference: {fileID: 0}
+    - target: {fileID: 1183846832395339462, guid: d742959d7e895bd43aa1d37315571bc8,
+        type: 3}
+      propertyPath: enginePower.m_Curve.Array.data[2].value
+      value: 760.50885
+      objectReference: {fileID: 0}
+    - target: {fileID: 1183846832395339463, guid: d742959d7e895bd43aa1d37315571bc8,
+        type: 3}
+      propertyPath: m_Mass
+      value: 1500
+      objectReference: {fileID: 0}
     - target: {fileID: 1183846832395339466, guid: d742959d7e895bd43aa1d37315571bc8,
         type: 3}
       propertyPath: m_Name
