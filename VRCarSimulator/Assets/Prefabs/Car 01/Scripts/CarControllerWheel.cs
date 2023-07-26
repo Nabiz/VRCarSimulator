@@ -136,13 +136,13 @@ public class CarControllerWheel : MonoBehaviour
     {
         if (horizontalInput > 0)
         {
-            frontLeftWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(3.18f / (radius + (1.5f / 2.0f))) * horizontalInput;
-            frontRightWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(3.18f / (radius - (1.5f / 2.0f))) * horizontalInput;
+            frontLeftWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(2.2f / (radius + (1f / 2.0f))) * horizontalInput;
+            frontRightWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(2.2f / (radius - (1f / 2.0f))) * horizontalInput;
         }
         else if(horizontalInput < 0)
         {
-            frontLeftWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(2.12f / (radius - (1.5f / 2.0f))) * horizontalInput;
-            frontRightWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(2.12f / (radius + (1.5f / 2.0f))) * horizontalInput;
+            frontLeftWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(2.2f / (radius - (1f / 2.0f))) * horizontalInput;
+            frontRightWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(2.2f / (radius + (1f / 2.0f))) * horizontalInput;
         }
         else
         {
