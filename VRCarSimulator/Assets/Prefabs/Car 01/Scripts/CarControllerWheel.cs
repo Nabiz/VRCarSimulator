@@ -16,6 +16,8 @@ public class CarControllerWheel : MonoBehaviour
     private float radius = 4f;
     private float downForce = 100f;
 
+    public GameObject xrrig;
+
     // Settings
     [SerializeField] private float motorTorque, breakForce, maxSteerAngle;
 
@@ -50,6 +52,12 @@ public class CarControllerWheel : MonoBehaviour
         if (Input.GetKey(KeyCode.Space))
         {
             isStarted = true;
+        }
+
+        if (Input.GetKey(KeyCode.H))
+        {
+            Debug.Log("DUPA");
+            xrrig.transform.localPosition = new Vector3(-0.35f, -0.25f, 0.05f);
         }
 
         if (isStarted)

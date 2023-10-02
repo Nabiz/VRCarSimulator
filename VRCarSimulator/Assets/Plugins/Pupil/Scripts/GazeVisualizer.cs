@@ -182,6 +182,7 @@ namespace PupilLabs
             {
                 if (recordingController.IsRecording)
                 {
+                    Debug.DrawRay(new Vector3(0, -100f, 0), Vector3.forward, Color.yellow);
                     Dictionary<string, object> hitObjectDict = new Dictionary<string, object>() {
                     { "hit_object", hit.collider.gameObject.name }, { "object_distance", hit.distance } };
                     annotationPublisher.SendAnnotation("hit_object", gazeTimestamp, 0.0f, hitObjectDict);
