@@ -590,7 +590,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   xrrig: {fileID: 1183846830464115565}
   motorTorque: 0
-  breakForce: 15000
+  breakForce: 50000
   maxSteerAngle: 30
   frontLeftWheelCollider: {fileID: 1183846831799208510}
   frontRightWheelCollider: {fileID: 1183846831483060941}
