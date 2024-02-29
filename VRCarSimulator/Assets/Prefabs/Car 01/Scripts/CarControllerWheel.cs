@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using PupilLabs;
 
@@ -13,8 +14,8 @@ public class CarControllerWheel : MonoBehaviour
     private bool gearForrward = true;
 
     private Rigidbody rb;
-    private float radius = 4f;
-    private float downForce = 100f;
+    private float radius = 2f, wheelbase = 2.15f, trackWidth = 1f;
+    private float downForce = 500f;
 
     public GameObject xrrig;
 
@@ -29,7 +30,7 @@ public class CarControllerWheel : MonoBehaviour
     [SerializeField] private Transform frontLeftWheelTransform, frontRightWheelTransform;
     [SerializeField] private Transform rearLeftWheelTransform, rearRightWheelTransform;
 
-    [SerializeField] private AnimationCurve enginePower;
+    [SerializeField] private AnimationCurve engineTorque;
 
     [SerializeField] private float[] gears = new float[6];
     private int currentGear = 0;
@@ -37,6 +38,8 @@ public class CarControllerWheel : MonoBehaviour
 
     [SerializeField] private Transform steerWheel;
     float speed = 0f;
+
+    [SerializeField] private Image arrowGPS;
 
     [Header("Recording")]
     public AnnotationPublisher annotationPublisher;
@@ -56,8 +59,7 @@ public class CarControllerWheel : MonoBehaviour
 
         if (Input.GetKey(KeyCode.H))
         {
-            Debug.Log("DUPA");
-            xrrig.transform.localPosition = new Vector3(-0.35f, -0.25f, 0.05f);
+            xrrig.transform.localPosition = new Vector3(-0.30f, -0.52f, 0.0f);
         }
 
         if (isStarted)
@@ -74,13 +76,14 @@ public class CarControllerWheel : MonoBehaviour
             {
                 ChangeGear();
             }  
-            CalculateEngineTorque();
+            CalculateMotorTorque();
             Motor();
             Steering();
             UpdateWheels();
         }
         steerWheel.localEulerAngles = new Vector3(0f, 0f, -horizontalInput * 450f);
         AddDownForce();
+        AddWindForce();
         if (recordingController.IsRecording)
         {
             LogCarStatusAnnotation();
@@ -110,6 +113,11 @@ public class CarControllerWheel : MonoBehaviour
     private void AddDownForce()
     {
         rb.AddForce(-transform.up * downForce * rb.velocity.magnitude);
+    }
+
+    private void AddWindForce()
+    {
+            rb.AddForce(0.4f * 0.5f * 1.3f * 4.0f * rb.velocity.sqrMagnitude * -rb.velocity.normalized);
     }
 
     private void Motor()
@@ -144,13 +152,13 @@ public class CarControllerWheel : MonoBehaviour
     {
         if (horizontalInput > 0)
         {
-            frontLeftWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(2.2f / (radius + (1f / 2.0f))) * horizontalInput;
-            frontRightWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(2.2f / (radius - (1f / 2.0f))) * horizontalInput;
+            frontLeftWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(wheelbase / (radius + (trackWidth / 2.0f))) * horizontalInput;
+            frontRightWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(wheelbase / (radius - (trackWidth / 2.0f))) * horizontalInput;
         }
         else if(horizontalInput < 0)
         {
-            frontLeftWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(2.2f / (radius - (1f / 2.0f))) * horizontalInput;
-            frontRightWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(2.2f / (radius + (1f / 2.0f))) * horizontalInput;
+            frontLeftWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(wheelbase / (radius - (trackWidth / 2.0f))) * horizontalInput;
+            frontRightWheelCollider.steerAngle = Mathf.Rad2Deg * Mathf.Atan(wheelbase / (radius + (trackWidth / 2.0f))) * horizontalInput;
         }
         else
         {
@@ -160,34 +168,31 @@ public class CarControllerWheel : MonoBehaviour
     }
 
     float engineRpm = 0;
-    private void CalculateEngineTorque()
+    private void CalculateMotorTorque()
     {
         float wheelRpm = CalculateWheelRpm();
-        motorTorque = enginePower.Evaluate(engineRpm) * gears[currentGear] * verticalInput / 4.0f;
+        motorTorque = engineTorque.Evaluate(engineRpm) * gears[currentGear] * verticalInput;
         float velocity = 0.0f;
-        engineRpm = Mathf.SmoothDamp(engineRpm, 800 + (Mathf.Abs(wheelRpm) * 3.4f * gears[currentGear]), ref velocity, 0.02f);
-        
+        engineRpm = Mathf.SmoothDamp(engineRpm, 800 + (Mathf.Abs(wheelRpm) * 3.2f * gears[currentGear]), ref velocity, 0.02f);
     }
 
     private void ChangeGear()
     {
-        if (engineRpm > 4800)
+        if (engineRpm > 4500)
         {
-            currentGear = Math.Clamp(currentGear + 1, 0, gears.Length-1);
+            currentGear = Math.Clamp(currentGear + 1, 0, gears.Length - 1);
         }
         else if (engineRpm < 2000)
         {
-            currentGear = Math.Clamp(currentGear - 1, speed < 4.0f ? 0 : 1, gears.Length-1);
+            currentGear = Math.Clamp(currentGear - 1, speed < 4.0f ? 0 : 1, gears.Length - 1);
         }
-
-        Debug.Log(engineRpm.ToString() + " " + (currentGear+1).ToString() + " " + speed.ToString());
     }
 
     private float CalculateWheelRpm()
     {
         float wheelRpm = 0.0f;
         wheelRpm = frontLeftWheelCollider.rpm + frontRightWheelCollider.rpm + rearLeftWheelCollider.rpm + rearRightWheelCollider.rpm;
-        return wheelRpm/2f;
+        return wheelRpm/4f;
     }
 
     private void UpdateWheels()
@@ -224,9 +229,9 @@ public class CarControllerWheel : MonoBehaviour
 
     private void LogCarStatusAnnotation()
     {
-        if(Time.frameCount % 2 == 0)
+        //if (Time.frameCount % 2 == 0)
         {
-            Dictionary<string, object> carStaus = new Dictionary<string, object>();
+           Dictionary<string, object> carStaus = new Dictionary<string, object>();
             carStaus.Add("speed", speed);
             carStaus.Add("pos_x", transform.position.x);
             carStaus.Add("pos_y", transform.position.y);
@@ -234,6 +239,25 @@ public class CarControllerWheel : MonoBehaviour
             carStaus.Add("break_input", breakInput);
             carStaus.Add("wheel_input", horizontalInput);
             annotationPublisher.SendAnnotation("car_status", 0f, carStaus);
+        }
+    }
+
+    public void setDiretctionGPS(int direction = 0)
+    {
+        switch(direction)
+        {
+            case -1:
+                arrowGPS.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 90f);
+                break;
+            case 0:
+                arrowGPS.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0f);
+                break;
+            case 1:
+                arrowGPS.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, -90f);
+                break;
+            default:
+                arrowGPS.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 180f);
+                break;
         }
     }
 }

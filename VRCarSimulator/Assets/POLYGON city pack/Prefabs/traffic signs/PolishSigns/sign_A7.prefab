@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 33451830083858870}
   - component: {fileID: 23322208581366318}
   - component: {fileID: 64102379198064194}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: sign cycle form
   m_TagString: Untagged
   m_Icon: {fileID: 0}

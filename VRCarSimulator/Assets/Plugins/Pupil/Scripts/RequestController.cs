@@ -142,7 +142,7 @@ namespace PupilLabs
             isConnecting = false;
             Connected();
 #if UNITY_EDITOR
-            EditorUtility.SetDirty(this);
+            //EditorUtility.SetDirty(this);
 #endif
 
             yield break;

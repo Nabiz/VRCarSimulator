@@ -182,14 +182,19 @@ namespace PupilLabs
             {
                 if (recordingController.IsRecording)
                 {
-                    Debug.DrawRay(new Vector3(0, -100f, 0), Vector3.forward, Color.yellow);
+                    //Debug.DrawRay(new Vector3(0, -100f, 0), Vector3.forward, Color.yellow);
                     Dictionary<string, object> hitObjectDict = new Dictionary<string, object>() {
-                    { "hit_object", hit.collider.gameObject.name }, { "object_distance", hit.distance } };
+                    { "hit_object", hit.collider.gameObject.name }, { "distance", hit.distance } };
                     annotationPublisher.SendAnnotation("hit_object", gazeTimestamp, 0.0f, hitObjectDict);
                 }
                 else
                 {
                     Debug.DrawRay(origin, direction * hit.distance, Color.yellow);
+                    if (hit.collider.gameObject.GetComponent<MeshRenderer>())
+                    {
+                        MeshRenderer meshRenderer = hit.collider.gameObject.GetComponent<MeshRenderer>();
+                        meshRenderer.material.color = Color.red;
+                    }
                     gazeDirectionMarker.position = origin + direction * hit.distance;
                     gazeDirectionMarker.LookAt(origin);
                     projectionMarker.position = hit.point;
