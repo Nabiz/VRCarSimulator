@@ -1911,7 +1911,6 @@ GameObject:
   - component: {fileID: 4636577582705874721}
   - component: {fileID: 656756184046027331}
   - component: {fileID: 2459001694855091483}
-  - component: {fileID: 6265921708820063610}
   m_Layer: 0
   m_Name: Jenny
   m_TagString: Untagged
@@ -1976,18 +1975,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &6265921708820063610
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5409876563867553179}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e582fcaf8428caf45a5a9b4bef4b728c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &5556509744708440074
 GameObject:
   m_ObjectHideFlags: 0

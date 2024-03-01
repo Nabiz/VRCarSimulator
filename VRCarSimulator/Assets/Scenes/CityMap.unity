@@ -357,7 +357,7 @@ PrefabInstance:
     - target: {fileID: 1183846832395339461, guid: d742959d7e895bd43aa1d37315571bc8,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 609.9502
+      value: 575.41986
       objectReference: {fileID: 0}
     - target: {fileID: 1183846832395339461, guid: d742959d7e895bd43aa1d37315571bc8,
         type: 3}
@@ -367,12 +367,12 @@ PrefabInstance:
     - target: {fileID: 1183846832395339461, guid: d742959d7e895bd43aa1d37315571bc8,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -141.35002
+      value: -35.819748
       objectReference: {fileID: 0}
     - target: {fileID: 1183846832395339461, guid: d742959d7e895bd43aa1d37315571bc8,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.7073026
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 1183846832395339461, guid: d742959d7e895bd43aa1d37315571bc8,
         type: 3}
@@ -382,7 +382,7 @@ PrefabInstance:
     - target: {fileID: 1183846832395339461, guid: d742959d7e895bd43aa1d37315571bc8,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.70691097
+      value: 0.00027677233
       objectReference: {fileID: 0}
     - target: {fileID: 1183846832395339461, guid: d742959d7e895bd43aa1d37315571bc8,
         type: 3}
@@ -397,7 +397,7 @@ PrefabInstance:
     - target: {fileID: 1183846832395339461, guid: d742959d7e895bd43aa1d37315571bc8,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -270.03198
+      value: -360.032
       objectReference: {fileID: 0}
     - target: {fileID: 1183846832395339461, guid: d742959d7e895bd43aa1d37315571bc8,
         type: 3}
@@ -976,5 +976,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8251347383048085989, guid: dd97ab703f3850144803c0ff29b17a49,
+        type: 3}
+      propertyPath: annotationPublisher
+      value: 
+      objectReference: {fileID: 1002534984}
+    - target: {fileID: 8251347383048085989, guid: dd97ab703f3850144803c0ff29b17a49,
+        type: 3}
+      propertyPath: recordingController
+      value: 
+      objectReference: {fileID: 1002534985}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dd97ab703f3850144803c0ff29b17a49, type: 3}
